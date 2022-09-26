@@ -21,9 +21,19 @@ CMD python /home/myapp/sample_app.py
 _EOF_
 
 cd tempdir || exit
-docker stop samplerunning || true
-docker rm sampelrunning || true
-docker rmi sampleapp || true
+if [ -n $(docker images | grep samplerunning) ];
+then
+    echo "Stopping old container..."
+    docker stop samplerunning || true
+    docker rm samplerunning || true
+    echo "Stopped"
+fi
+if [ -n $(docker ps -a | grep sampleapp) ];
+then
+    echo "Removing old image..."
+    docker rmi sampleapp || true
+    echo "Removed"
+fi
 docker build -t sampleapp .
 docker run -t -d -p 5050:5050 --name samplerunning sampleapp
 docker ps -a 
