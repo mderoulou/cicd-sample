@@ -21,6 +21,9 @@ CMD python /home/myapp/sample_app.py
 _EOF_
 
 cd tempdir || exit
+docker stop samplerunning || true
+docker rm sampelrunning || true
+docker rmi sampleapp || true
 docker build -t sampleapp .
 docker run -t -d -p 5050:5050 --name samplerunning sampleapp
 docker ps -a 
